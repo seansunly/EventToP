@@ -9,6 +9,7 @@ import NotFoundPage from './component/page/error/NotFoundPage.jsx'
 import Layout from './component/layout/Layout.jsx'
 import EventHome from './component/page/eventAll/EventHome.jsx'
 import EventDetails from './component/page/eventAll/EventDetails.jsx'
+import MapHome from './component/page/map/MapHome.jsx'
 const router = createBrowserRouter([
   {
     path: "/",
@@ -23,6 +24,9 @@ const router = createBrowserRouter([
       {
         path:"/eventDetail/:id",
         element:<EventDetails/>
+      },{
+        path:"/map",
+        element:<MapHome/>
       }
       
     ],

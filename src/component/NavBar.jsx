@@ -19,6 +19,7 @@ export default function NavBar() {
     // console.log("pathname: ", pathname);
     const [navbarlist, setnavbarlist] = useState([
       { name: "Sport", path: "/eventHome" },
+      {name:"mapSport",path:"/map"}
     ]);
 
   return (
