@@ -11,6 +11,7 @@ import {
 } from "react-router-dom";
 import { key } from "localforage";
 import { list } from "postcss";
+import { GoSearch } from "react-icons/go";
 export default function NavBar() {
 
 
@@ -39,11 +40,15 @@ export default function NavBar() {
         </Navbar.Brand>
         <div className="flex items-center md:order-2 ">
           <div className=" relative">
-            <p className=" absolute -top-4 right-3 text-cyan-900">
-            </p>
+            <p className=" absolute -top-4 right-3 text-cyan-900"></p>
             <Link to={`/cart`}>
               <BiSolidCartAdd className=" mr-5" />
             </Link>
+          </div>
+
+          <div className=" ml-10 flex">
+            <GoSearch className="" />
+            <input type="search" className="  w-[150px] h-[30px] rounded-lg mr-40"></input>
           </div>
 
           <Button>Get started</Button>

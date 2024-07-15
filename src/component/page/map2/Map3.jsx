@@ -32,6 +32,7 @@ function MyComponent() {
     lat: 11.54823482166757,
     lng: 104.86847693959957,
   });
+  const [searchTerm, setSearchTerm] = useState("");
 
   useEffect(() => {
     dispatch(fetchMaps());
@@ -88,72 +89,104 @@ function MyComponent() {
         }
       }
     );
+
+    // Pan and zoom to the selected marker
+    setMap((prevMap) => {
+      if (prevMap) {
+        prevMap.panTo({
+          lat: parseFloat(marker.latitude),
+          lng: parseFloat(marker.longitude),
+        });
+        // prevMap.setZoom(10);
+      }
+      return prevMap;
+    });
   };
 
+  const filteredMaps = searchTerm
+    ? maps.filter((marker) =>
+        marker.sport_name.toLowerCase().includes(searchTerm.toLowerCase().trim())
+      )
+    : maps;
+
+  useEffect(() => {
+    if (selectedMarker) {
+      handleMarkerClick(selectedMarker);
+    }
+  }, [selectedMarker, handleMarkerClick]);
+
   return isLoaded ? (
-    <GoogleMap
-      mapContainerStyle={containerStyle}
-      center={{
-        lat: startLocation.lat,
-        lng: startLocation.lng,
-      }}
-      zoom={13}
-      onLoad={onLoad}
-      onUnmount={onUnmount}
-    >
-      {maps.map((marker, index) => (
-        <Marker
-          key={index}
-          position={{
-            lat: parseFloat(marker.latitude),
-            lng: parseFloat(marker.longitude),
-          }}
-          label={{
-            text: marker.sport_name,
-            className: "custom-label",
-          }}
+    <div>
+      <input
+        type="text"
+        placeholder="Search by name"
+        value={searchTerm}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+          const filteredMarker = filteredMaps.find((marker) =>
+            marker.sport_name
+              .toLowerCase()
+              .includes(e.target.value.toLowerCase().trim())
+          );
+          if (filteredMarker) {
+            setSelectedMarker(filteredMarker);
+          }
+        }}
+        className="mb-4 px-4 py-2 border border-gray-300 rounded-md"
+      />
+      <GoogleMap
+        mapContainerStyle={containerStyle}
+        center={{
+          lat: startLocation.lat,
+          lng: startLocation.lng,
+        }}
+        zoom={13}
+        onLoad={onLoad}
+        onUnmount={onUnmount}
+      >
+        {filteredMaps.map((marker, index) => (
+          <Marker
+            key={index}
+            position={{
+              lat: parseFloat(marker.latitude),
+              lng: parseFloat(marker.longitude),
+            }}
+            label={{
+              text: marker.sport_name,
+              className: "custom-label",
+            }}
             onMouseOver={() => handleMarkerHover(marker)}
-            // onMouseOut={handleMarkerHoverExit}
-          //onClick={() => handleMarkerHover(marker)}
-          //   onClick={() => handleMarkerClick(marker)}
-        >
-          {hoveredMarker && hoveredMarker === marker && (
-            <InfoWindow
-              position={{
-                lat: parseFloat(marker.latitude),
-                lng: parseFloat(marker.longitude),
-              }}
-              options={{
-                pixelOffset: new window.google.maps.Size(0, -30),
-              }}
-            >
-              <div className="w-[300px] h-[250px] bg-white shadow-lg rounded-lg p-1">
-                <h3 className="text-xl font-bold text-gray-800 mb-2">
-                  {marker.sport_name}
-                </h3>
-                {/* <p className="text-gray-600 mb-2">
-                  Latitude: {parseFloat(marker.latitude).toFixed(2)}
-                </p>
-                <p className="text-gray-600 mb-4">
-                  Longitude: {parseFloat(marker.longitude).toFixed(2)}
-                </p> */}
-                {selectedMarker === marker && distance && (
-                  <p className="text-gray-600 mb-4">Distance: {distance}</p>
-                )}
-                <img
-                  className="w-full h-48 object-cover rounded-lg"
-                  alt={marker.sport_name}
-                  src={marker.image}
-                />
-                <button className=" bg-slate-600 text-xl mt-5 rounded-lg w-[50px] h-[50px]">
-                  go
-                </button>
-              </div>
-            </InfoWindow>
-          )}
-        </Marker>
-      ))}
-    </GoogleMap>
+            onClick={() => handleMarkerClick(marker)}
+          >
+            {hoveredMarker && hoveredMarker === marker && (
+              <InfoWindow
+                position={{
+                  lat: parseFloat(marker.latitude),
+                  lng: parseFloat(marker.longitude),
+                }}
+                options={{
+                  pixelOffset: new window.google.maps.Size(0, -30),
+                }}
+              >
+                <div className="w-[300px] h-[250px] bg-white shadow-lg rounded-lg p-1">
+                  <h3 className="text-xl font-bold text-gray-800 mb-2">
+                    {marker.sport_name}
+                  </h3>
+                  {selectedMarker === marker && distance && (
+                    <p className="text-gray-600 mb-4">Distance: {distance}</p>
+                  )}
+                  <img
+                    className="w-full h-48 object-cover rounded-lg"
+                    alt={marker.sport_name}
+                    src={marker.image}
+                  />
+                </div>
+              </InfoWindow>
+            )}
+          </Marker>
+        ))}
+      </GoogleMap>
+    </div>
   ) : (
     <></>
   );

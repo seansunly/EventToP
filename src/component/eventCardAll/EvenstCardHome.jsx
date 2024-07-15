@@ -16,6 +16,8 @@ export default function EvenstCardHome({ slug, title, img, about, date, descript
   const titles = "facebook";
   return (
     <>
+
+    
       <Link to={`/eventDetail/${id}`}>
         <section className="flex justify-center ">
           <div className="w-full h-full sm:w-[650px] md:w-[758px] lg:w-[900px] xl:w-[1000px] min-h-5 flex-1 p-0 group">
