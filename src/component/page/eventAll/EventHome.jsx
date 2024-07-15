@@ -11,7 +11,7 @@ export default function EventHome() {
     useEffect(()=>{
         dispach(fetchevents());
     },[])
-    // console.log("hello tyeww ",events)
+     console.log("hello tyeww ",events)
   return (
     <div>
       <h1>this is vent page </h1>
